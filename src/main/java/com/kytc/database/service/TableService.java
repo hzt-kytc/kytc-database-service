@@ -43,4 +43,12 @@ public interface TableService {
 	 * @return ResultDTO<String>
 	 */
 	ResultDTO<String> export(String database, String tableName);
+	/**
+	 * @param database
+	 * @param tableName
+	 * @param priKey
+	 * @param priValue
+	 * @return
+	 */
+	ResultDTO<Map<String,Object>> dataDetail(String database, String tableName,String priKey,String priValue);
 }

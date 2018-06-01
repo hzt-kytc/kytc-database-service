@@ -49,4 +49,10 @@ public class TableServiceImpl implements TableService {
 		DatabaseUtils.export(page, tableName);
 		return new ResultDTO<String>();
 	}
+	@Override
+	public ResultDTO<Map<String, Object>> dataDetail(String database,
+			String tableName, String priKey, String priValue) {
+		// TODO Auto-generated method stub
+		return new ResultDTO<Map<String, Object>>(tableDao.dataDetail(database, tableName, priKey, priValue));
+	}
 }

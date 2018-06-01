@@ -83,6 +83,8 @@ public class DatabaseUtils {
 	private static String id = "";
 	private static String getShowName(ColumnDTO dto){
 		String comment = dto.getColumnComment();
+		comment = comment.replace(",", " ");
+		comment = comment.replace("，", " ");
 		if(comment==null||comment.trim().equals("")){
 			return dto.getColumnName();
 		}
@@ -92,7 +94,7 @@ public class DatabaseUtils {
 		}
 		return comment;
 	}
-	private static void init(PageDTO<ColumnDTO> page,String tableName){
+	public static void init(PageDTO<ColumnDTO> page,String tableName){
 		javaTableName = tableNameToJavaName(tableName);
 		if(tableName.trim().toLowerCase().startsWith("tb_")){
 			htmlName = tableName.trim().toLowerCase().replace("tb_", "");
