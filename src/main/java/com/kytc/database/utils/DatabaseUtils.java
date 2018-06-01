@@ -1,5 +1,6 @@
 package com.kytc.database.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -7,6 +8,7 @@ import java.util.List;
 
 import com.kytc.database.dto.ColumnDTO;
 import com.kytc.dto.PageDTO;
+import com.kytc.utils.common.TxtUtils;
 import com.kytc.utils.date.DateStyle;
 import com.kytc.utils.date.DateUtil;
 
@@ -14,27 +16,56 @@ public class DatabaseUtils {
 	private DatabaseUtils(){};
 	public static void export(PageDTO<ColumnDTO> page,String tableName){
 		init(page,tableName);
-//		StringBuffer controllerSb = toController(page,tableName);
-//		TxtUtils.write(controllerSb, "D://"+javaTableName+"Controller.java");
-//		
-//		controllerSb = toService(page,tableName);
-//		TxtUtils.write(controllerSb, "D://"+javaTableName+"Service.java");
-//		
-//		controllerSb = toImpl(page,tableName);
-//		TxtUtils.write(controllerSb, "D://"+javaTableName+"ServiceImpl.java");
-//		
-//		controllerSb = toDAO(page,tableName);
-//		TxtUtils.write(controllerSb, "D://"+javaTableName+"Dao.java");
-//		
-//		controllerSb = toMapper(page,tableName);
-//		TxtUtils.write(controllerSb, "D://"+javaTableName+"Mapper.xml");
-//		
-//		controllerSb = toPO(page,tableName);
-//		TxtUtils.write(controllerSb, "D://"+javaTableName+"PO.java");
-//		
-//		controllerSb = toVO(page,tableName);
-//		TxtUtils.write(controllerSb, "D://"+javaTableName+"VO.java");
-		toIndexJs(page,tableName);
+		File file=new File("D://database//"+javaTableName);
+		if(!file.exists()){
+			file.mkdir();
+		}
+		StringBuffer controllerSb = toController(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//"+javaTableName+"Controller.java");
+		
+		controllerSb = toService(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//"+javaTableName+"Service.java");
+		
+		controllerSb = toImpl(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//"+javaTableName+"ServiceImpl.java");
+		
+		controllerSb = toDAO(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//"+javaTableName+"Dao.java");
+		
+		controllerSb = toMapper(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//"+javaTableName+"Mapper.xml");
+		
+		controllerSb = toPO(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//"+javaTableName+"PO.java");
+		
+		controllerSb = toVO(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//"+javaTableName+"VO.java");
+		
+		controllerSb = toIndexJs(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//index.js");
+		
+		controllerSb = toIndexHtml(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//index.jsp");
+		
+		controllerSb = toAddHtml(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//add.jsp");
+		
+		controllerSb = toAddJs(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//add.js");
+		
+		controllerSb = toUpdateHtml(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//update.jsp");
+		
+		controllerSb = toUpdateJs(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//update.js");
+		
+		controllerSb = toDetailHtml(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//detail.jsp");
+		
+		controllerSb = toDetailJs(page,tableName);
+		TxtUtils.write(controllerSb, "D://database//"+javaTableName+"//detail.js");
+//		controllerSb = toUpdateHtml(page, tableName);
+//		System.out.println(controllerSb);
 	}
 	private static String blanks(int length){
 		StringBuffer sb = new StringBuffer("");
@@ -50,6 +81,17 @@ public class DatabaseUtils {
 	private static String htmlName = "";
 	private static String javaTableName1 = "";
 	private static String id = "";
+	private static String getShowName(ColumnDTO dto){
+		String comment = dto.getColumnComment();
+		if(comment==null||comment.trim().equals("")){
+			return dto.getColumnName();
+		}
+		comment = comment.trim();
+		if(comment.contains(" ")){
+			return comment.split(" ")[0];
+		}
+		return comment;
+	}
 	private static void init(PageDTO<ColumnDTO> page,String tableName){
 		javaTableName = tableNameToJavaName(tableName);
 		if(tableName.trim().toLowerCase().startsWith("tb_")){
@@ -71,16 +113,285 @@ public class DatabaseUtils {
 				if(dto.getColumnKey().toLowerCase().trim().equals("pri")){
 					id = dto.getColumnName().trim().toLowerCase();
 				}
+				dto.setShowComment(getShowName(dto));
 			}
 		}
 	}
+	private static String zhuanyi(int length){
+		StringBuffer sb = new StringBuffer("\n");
+		for(int i=0;i<length;i++){
+			sb.append("\t");
+		}
+		return sb.toString();
+	}
+	public static StringBuffer toUpdateHtml(PageDTO<ColumnDTO> page,String tableName){
+		StringBuffer detailHtml = new StringBuffer("");
+		detailHtml.append("<%@ page language=\"java\" contentType=\"text/html; charset=UTF-8\""+
+              zhuanyi(1)+"pageEncoding=\"UTF-8\"%>"+
+              zhuanyi(0)+"<%@taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\"%>"+
+              zhuanyi(0)+"<%@taglib uri=\"http://java.sun.com/jsp/jstl/fmt\" prefix=\"fmt\"%>"+ 
+              zhuanyi(0)+"<script type=\"text/javascript\" src=\"${pageContext.request.contextPath}/js/"+javaTableName1+"/update.js\"></script>"+
+              zhuanyi(0)+"<div id=\"cms_"+htmlName+"_update_main_div\" style=\"width:100%;height:100%;\">"+
+              zhuanyi(1)+"<input type=\"hidden\" name=\""+id+"\" value=\"${result.data."+id+"}\">");
+		int size = 4;
+		String width1 = " style=\"width:15%;\"";
+		String width2 = " style=\"width:35%;\"";
+		if(page.getRows().size()>7){
+			size = 4;
+			detailHtml.append(zhuanyi(1)+"<table class=\"d_table\">");
+		}else{
+			size = 2;
+			width1 = " style=\"width:30%;\"";
+			width2 = " style=\"width:70%;\"";
+			detailHtml.append(zhuanyi(1)+"<table class=\"s_table\">");
+		}
+		int i = 0;
+		int j = 0;
+		for(ColumnDTO dto:page.getRows()){
+			if("auto_increment".equals(dto.getExtra())){
+				j++;
+				continue;
+			}
+			if(dto.getColumnName().equals("operator")||dto.getColumnName().equals("is_deleted")||dto.getColumnName().equals("gmt_create")||dto.getColumnName().equals("gmt_modified")){
+				j++;
+				continue;
+			}
+			if(i%size==0){
+				detailHtml.append(zhuanyi(2)+"<tr>");
+			}
+			detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width1:"")+">"+dto.getShowComment()+":</td>");
+			if(size==4&&(page.getRows().size()-j)%2==1&&(i+(j*2))==page.getRows().size()*2-2){
+				detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width2+" colspan=\"3\"":" colspan=\"3\"")+">");
+			}else{
+				detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width2:"")+">");
+			}
+			if(dto.getDataType().equals("date")){
+				detailHtml.append(zhuanyi(4)+"<input class=\"easyui-datebox\" value=\"${result.data."+dto.getJavaName()+"}\" name=\""+dto.getJavaName()+"\"/>"+zhuanyi(3)+"</td>");
+			}else if(dto.getDataType().equals("datetime")||dto.getDataType().equals("timestamp")){
+				detailHtml.append(zhuanyi(4)+"<input class=\"easyui-datetimebox\" value=\"${result.data."+dto.getJavaName()+"}\" name=\""+dto.getJavaName()+"\"/>"+zhuanyi(3)+"</td>");
+			}else if(dto.getColumnName().equals("sort_num")){
+				detailHtml.append(zhuanyi(4)+"<input class=\"easyui-numberbox\" name=\"sortNum\" value=\"${result.data."+dto.getJavaName()+"}\" data-options=\"min:1,required:true\">"+zhuanyi(3)+"</td>");
+			}else{
+				detailHtml.append(zhuanyi(4)+"<input name=\""+dto.getJavaName()+"\" value=\"${result.data."+dto.getJavaName()+"}\" class=\"easyui-textbox\"/>"+zhuanyi(3)+"</td>");
+			}
+			i+=2;
+			if(i%size==0||i+(j*2)==page.getRows().size()*2){
+				detailHtml.append(zhuanyi(2)+"</tr>");
+			}
+		}
+		detailHtml.append(zhuanyi(2)+"<tr>"+
+				zhuanyi(3)+"<td colspan=\""+size+"\">"+
+				zhuanyi(4)+"<div class=\"btn_div\">"+
+				zhuanyi(5)+"<a name=\"close\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-close'\">关闭</a>"+
+				zhuanyi(4)+"</div>"+
+				zhuanyi(3)+"</td>"+
+				zhuanyi(2)+"</tr>"+zhuanyi(1)+"</table>");
+		detailHtml.append(zhuanyi(0)+"</div>");
+		System.out.println(detailHtml.toString());
+		return detailHtml;
+	}
+	public static StringBuffer toAddHtml(PageDTO<ColumnDTO> page,String tableName){
+		StringBuffer detailHtml = new StringBuffer("");
+		detailHtml.append("<%@ page language=\"java\" contentType=\"text/html; charset=UTF-8\""+
+              zhuanyi(1)+"pageEncoding=\"UTF-8\"%>"+
+              zhuanyi(0)+"<%@taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\"%>"+
+              zhuanyi(0)+"<%@taglib uri=\"http://java.sun.com/jsp/jstl/fmt\" prefix=\"fmt\"%>"+ 
+              zhuanyi(0)+"<script type=\"text/javascript\" src=\"${pageContext.request.contextPath}/js/"+javaTableName1+"/add.js\"></script>"+
+              zhuanyi(0)+"<div id=\"cms_"+htmlName+"_add_main_div\" style=\"width:100%;height:100%;\">");
+		int size = 4;
+		String width1 = " style=\"width:15%;\"";
+		String width2 = " style=\"width:35%;\"";
+		if(page.getRows().size()>7){
+			size = 4;
+			detailHtml.append(zhuanyi(1)+"<table class=\"d_table\">");
+		}else{
+			size = 2;
+			width1 = " style=\"width:30%;\"";
+			width2 = " style=\"width:70%;\"";
+			detailHtml.append(zhuanyi(1)+"<table class=\"s_table\">");
+		}
+		int i = 0;
+		int j = 0;
+		for(ColumnDTO dto:page.getRows()){
+			if("auto_increment".equals(dto.getExtra())){
+				j++;
+				continue;
+			}
+			if(dto.getColumnName().equals("operator")||dto.getColumnName().equals("is_deleted")||dto.getColumnName().equals("gmt_create")||dto.getColumnName().equals("gmt_modified")){
+				j++;
+				continue;
+			}
+			if(i%size==0){
+				detailHtml.append(zhuanyi(2)+"<tr>");
+			}
+			detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width1:"")+">"+dto.getShowComment()+":</td>");
+			if(size==4&&(page.getRows().size()-j)%2==1&&(i+(j*2))==page.getRows().size()*2-2){
+				detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width2+" colspan=\"3\"":" colspan=\"3\"")+">");
+			}else{
+				detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width2:"")+">");
+			}
+			if(dto.getDataType().equals("date")){
+				detailHtml.append(zhuanyi(4)+"<input class=\"easyui-datebox\" name=\""+dto.getJavaName()+"\"/>"+zhuanyi(3)+"</td>");
+			}else if(dto.getDataType().equals("datetime")||dto.getDataType().equals("timestamp")){
+				detailHtml.append(zhuanyi(4)+"<input class=\"easyui-datetimebox\" name=\""+dto.getJavaName()+"\"/>"+zhuanyi(3)+"</td>");
+			}else if(dto.getColumnName().equals("sort_num")){
+				detailHtml.append(zhuanyi(4)+"<input class=\"easyui-numberbox\" name=\"sortNum\" value=\"1\" data-options=\"min:1,required:true\">"+zhuanyi(3)+"</td>");
+			}else{
+				detailHtml.append(zhuanyi(4)+"<input name=\""+dto.getJavaName()+"\" class=\"easyui-textbox\"/>"+zhuanyi(3)+"</td>");
+			}
+			i+=2;
+			if(i%size==0||i+(j*2)==page.getRows().size()*2){
+				detailHtml.append(zhuanyi(2)+"</tr>");
+			}
+		}
+		detailHtml.append(zhuanyi(2)+"<tr>"+
+				zhuanyi(3)+"<td colspan=\""+size+"\">"+
+				zhuanyi(4)+"<div class=\"btn_div\">"+
+				zhuanyi(5)+"<a name=\"close\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-close'\">关闭</a>"+
+				zhuanyi(4)+"</div>"+
+				zhuanyi(3)+"</td>"+
+				zhuanyi(2)+"</tr>"+zhuanyi(1)+"</table>");
+		detailHtml.append(zhuanyi(0)+"</div>");
+		System.out.println(detailHtml.toString());
+		return detailHtml;
+	}
+	public static StringBuffer toDetailHtml(PageDTO<ColumnDTO> page,String tableName){
+		StringBuffer detailHtml = new StringBuffer("");
+		detailHtml.append("<%@ page language=\"java\" contentType=\"text/html; charset=UTF-8\""+
+              zhuanyi(1)+"pageEncoding=\"UTF-8\"%>"+
+              zhuanyi(0)+"<%@taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\"%>"+
+              zhuanyi(0)+"<%@taglib uri=\"http://java.sun.com/jsp/jstl/fmt\" prefix=\"fmt\"%>"+ 
+              zhuanyi(0)+"<script type=\"text/javascript\" src=\"${pageContext.request.contextPath}/js/"+javaTableName1+"/detail.js\"></script>"+
+              zhuanyi(0)+"<div id=\"cms_"+htmlName+"_detail_main_div\" style=\"width:100%;height:100%;\">");
+		int size = 4;
+		String width1 = " style=\"width:15%;\"";
+		String width2 = " style=\"width:35%;\"";
+		if(page.getRows().size()>20){
+			size = 4;
+			detailHtml.append(zhuanyi(1)+"<table class=\"d_table\">");
+		}else{
+			size = 2;
+			width1 = " style=\"width:30%;\"";
+			width2 = " style=\"width:70%;\"";
+			detailHtml.append(zhuanyi(1)+"<table class=\"s_table\">");
+		}
+		int i = 0;
+		for(ColumnDTO dto:page.getRows()){
+			if(i%size==0){
+				detailHtml.append(zhuanyi(2)+"<tr>");
+			}
+			detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width1:"")+">"+dto.getShowComment()+":</td>");
+			if(size==4&&page.getRows().size()%2==1&&i==page.getRows().size()*2-2){
+				detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width2+" colspan=\"3\"":" colspan=\"3\"")+">");
+			}else{
+				detailHtml.append(zhuanyi(3)+"<td"+((i<size)?width2:"")+">");
+			}
+			if(dto.getColumnName().equals("is_deleted")){
+				detailHtml.append(zhuanyi(4)+"${result.data.deleted==1?\"是\":\"否\" }"+zhuanyi(3)+"</td>");
+			}else if(dto.getDataType().equals("date")||dto.getDataType().equals("datetime")||dto.getDataType().equals("timestamp")){
+				detailHtml.append(zhuanyi(4)+"<fmt:formatDate value=\"${result.data."+dto.getJavaName()+" }\" pattern=\"yyyy-MM-dd  HH:mm:ss\" />"+zhuanyi(3)+"</td>");
+			}else{
+				detailHtml.append(zhuanyi(4)+"${result.data."+dto.getJavaName()+" }"+zhuanyi(3)+"</td>");
+			}
+			i+=2;
+			if(i%size==0||i==page.getRows().size()*2){
+				detailHtml.append(zhuanyi(2)+"</tr>");
+			}
+		}
+		detailHtml.append(zhuanyi(2)+"<tr>"+
+				zhuanyi(3)+"<td colspan=\""+size+"\">"+
+				zhuanyi(4)+"<div class=\"btn_div\">"+
+				zhuanyi(5)+"<a name=\"close\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-close'\">关闭</a>"+
+				zhuanyi(4)+"</div>"+
+				zhuanyi(3)+"</td>"+
+				zhuanyi(2)+"</tr>"+zhuanyi(1)+"</table>");
+		detailHtml.append(zhuanyi(0)+"</div>");
+		return detailHtml;
+	}
+	public static StringBuffer toDetailJs(PageDTO<ColumnDTO> page,String tableName){
+		StringBuffer addJs = new StringBuffer("");
+		addJs.append("$(function(){")
+			.append(zhuanyi(1)+"var mainDiv = $(\"#cms_"+htmlName+"_detail_main_div\");")
+			.append(zhuanyi(1)+"mainDiv.off().on(\"click\",\"a[name='close']\",function(){"+
+				zhuanyi(2)+"$.EasyUI.Window.close(mainDiv);"+
+				zhuanyi(1)+"});"+
+				zhuanyi(0)+"});");
+		System.out.println(addJs.toString());
+		return addJs;
+	}
+	public static StringBuffer toUpdateJs(PageDTO<ColumnDTO> page,String tableName){
+		StringBuffer addJs = new StringBuffer("");
+		addJs.append("$(function(){")
+			.append(zhuanyi(1)+"var mainDiv = $(\"#cms_"+htmlName+"_update_main_div\");"+
+					zhuanyi(1)+ "var parentMainDiv = $(\"#cms_"+htmlName+"_main_div\");")
+			.append(zhuanyi(1)+"var rootPath = \"/"+javaTableName1+"/\";")
+			.append(zhuanyi(1)+"mainDiv.off().on(\"click\",\"a[name='save']\",function(){"+
+					zhuanyi(2)+"if(mainDiv.form('validate')){"+
+				zhuanyi(3)+"var jsonData = mainDiv.toJSON();"+
+				zhuanyi(3)+"jsonData.deleted = 0;"+
+				zhuanyi(3)+"$.ajax({"+
+				zhuanyi(4)+"url:$.cms.url+rootPath+\"update\","+
+				zhuanyi(4)+"type:\"post\","+
+				zhuanyi(4)+"data:jsonData,"+
+				zhuanyi(4)+"dataType:\"json\","+
+				zhuanyi(4)+"success:function(data){"+
+				zhuanyi(5)+"if(data.status){"+
+				zhuanyi(6)+"$(\"a[name='search']\",parentMainDiv).trigger(\"click\");"+
+				zhuanyi(6)+"$.EasyUI.Window.close(mainDiv);"+
+				zhuanyi(5)+"}else{"+
+				zhuanyi(6)+"$.EasyUI.message(data.error_reason,\"s\",null);"+
+				zhuanyi(6)+"return;"+
+				zhuanyi(5)+"}"+
+				zhuanyi(4)+"}"+
+				zhuanyi(3)+"})"+
+				zhuanyi(2)+"}"+
+				zhuanyi(1)+"}).on(\"click\",\"a[name='close']\",function(){"+
+				zhuanyi(2)+"$.EasyUI.Window.close(mainDiv);"+
+				zhuanyi(1)+"});"+
+				zhuanyi(0)+"});");
+		System.out.println(addJs.toString());
+		return addJs;
+	}
+	public static StringBuffer toAddJs(PageDTO<ColumnDTO> page,String tableName){
+		StringBuffer addJs = new StringBuffer("");
+		addJs.append("$(function(){")
+			.append(zhuanyi(1)+"var mainDiv = $(\"#cms_"+htmlName+"_add_main_div\");"+
+					zhuanyi(1)+ "var parentMainDiv = $(\"#cms_"+htmlName+"_main_div\");")
+			.append(zhuanyi(1)+"var rootPath = \"/"+javaTableName1+"/\";")
+			.append(zhuanyi(1)+"mainDiv.off().on(\"click\",\"a[name='save']\",function(){"+
+					zhuanyi(2)+"if(mainDiv.form('validate')){"+
+				zhuanyi(3)+"var jsonData = mainDiv.toJSON();"+
+				zhuanyi(3)+"jsonData.deleted = 0;"+
+				zhuanyi(3)+"$.ajax({"+
+				zhuanyi(4)+"url:$.cms.url+rootPath+\"add\","+
+				zhuanyi(4)+"type:\"post\","+
+				zhuanyi(4)+"data:jsonData,"+
+				zhuanyi(4)+"dataType:\"json\","+
+				zhuanyi(4)+"success:function(data){"+
+				zhuanyi(5)+"if(data.status){"+
+				zhuanyi(6)+"$(\"a[name='search']\",parentMainDiv).trigger(\"click\");"+
+				zhuanyi(6)+"$.EasyUI.Window.close(mainDiv);"+
+				zhuanyi(5)+"}else{"+
+				zhuanyi(6)+"$.EasyUI.message(data.error_reason,\"s\",null);"+
+				zhuanyi(6)+"return;"+
+				zhuanyi(5)+"}"+
+				zhuanyi(4)+"}"+
+				zhuanyi(3)+"})"+
+				zhuanyi(2)+"}"+
+				zhuanyi(1)+"}).on(\"click\",\"a[name='close']\",function(){"+
+				zhuanyi(2)+"$.EasyUI.Window.close(mainDiv);"+
+				zhuanyi(1)+"});"+
+				zhuanyi(0)+"});");
+		System.out.println(addJs.toString());
+		return addJs;
+	}
 	public static StringBuffer toIndexJs(PageDTO<ColumnDTO> page,String tableName){
 		StringBuffer indexJs = new StringBuffer("");
-		indexJs.append("$(function(){\n")
-			.append("\tvar mainDiv = $(\"#cms_"+htmlName+"_main_div\");\n"
-					+ "\tvar mainDivList =  $(\"div.list div.data\",mainDiv);\n")
-			.append("\tvar rootPath = \"/"+javaTableName1+"/\";\n")
-			.append("\tmainDiv.height($(window).height()-49);\n")
+		indexJs.append("$(function(){")
+			.append(zhuanyi(1)+"var mainDiv = $(\"#cms_"+htmlName+"_main_div\");"
+					+zhuanyi(1)+ "var mainDivList =  $(\"div.list div.data\",mainDiv);")
+			.append(zhuanyi(1)+"var rootPath = \"/"+javaTableName1+"/\";")
+			.append(zhuanyi(1)+"mainDiv.height($(window).height()-49);\n")
 			.append("\tmainDiv.off().on(\"click\",\"a[name='add']\",function(){\n")
 			.append("\t\t$.EasyUI.Window({\n"+
 					"\t\t\turl:$.cms.url+rootPath+\"add\",\n"+
@@ -93,17 +404,13 @@ public class DatabaseUtils {
 					"\t\t\tgridId:mainDivList,\n"+
 					"\t\t\tfield:\""+id+"\",\n"+
 					"\t\t\tsuccess:function(value,row){\n"+
-					"\t\t\t\t$.ajax({\n"+
+					"\t\t\t\t$.EasyUI.Window({\n"+
 					"\t\t\t\t\turl:$.cms.url+rootPath+\"update\",\n"+
+					"\t\t\t\t\ttype:\"get\",\n"+
 					"\t\t\t\t\tdata:{\""+id+"\":value},\n"+
-					"\t\t\t\t\ttype:\"post\",\n"+
-					"\t\t\t\t\tdataType:\"json\",\n"+
-					"\t\t\t\t\tsuccess:function(data){\n"+
-					"\t\t\t\t\t\tif(data.status){\n"+
-					"\t\t\t\t\t\t\tmainDivList.datagrid('reload',$(\"form[name='search_form']\",main_div).toJSON());\n"+
-					"\t\t\t\t\t\t}else{\n"+
-					"\t\t\t\t\t\t\t$.EasyUI.message(data.reason,\"e\");\n"+
-					"\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t})\n\t\t\t}\n\t\t});\n\t})")
+					"\t\t\t\t\twidth:1000,\n"+
+					"\t\t\t\t\theight:800,\n"+
+					"\t\t\t\t\ttitle:\"修改\"\n\t\t\t\t});\n\t\t\t}\n\t\t})\n\t})")
 		.append(".on(\"click\",\"a[name='delete']\",function(){\n")
 		.append("\t\t$.datagrid.getSelectRow({\n"+
 				"\t\t\tgridId:mainDivList,\n"+
@@ -117,10 +424,10 @@ public class DatabaseUtils {
 				"\t\t\t\t\t\tdataType:\"json\",\n"+
 				"\t\t\t\t\t\tsuccess:function(data){\n"+
 				"\t\t\t\t\t\t\tif(data.status){\n"+
-				"\t\t\t\t\t\t\t\tmainDivList.datagrid('reload',$(\"form[name='search_form']\",main_div).toJSON());\n"+
+				"\t\t\t\t\t\t\t\tmainDivList.datagrid('reload',$(\"form[name='search_form']\",mainDiv).toJSON());\n"+
 				"\t\t\t\t\t\t\t}else{\n"+
 				"\t\t\t\t\t\t\t\t$.EasyUI.message(data.reason,\"e\");\n"+
-				"\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t})\n\t\t\t\t})\n\t\t\t})\n\t\t})\n\t})")
+				"\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t})\n\t\t\t\t})\n\t\t\t}\n\t\t})\n\t})")
 		.append(".on(\"click\",\"a[name='search']\",function(){\n")
 		.append("\t\tmainDivList.datagrid('reload',$(\"form[name='search_form']\",mainDiv).toJSON());\n"+
 				"\t})")
@@ -130,8 +437,8 @@ public class DatabaseUtils {
 				"\t});\n")
 		.append("\tinitGrid();\n")
 		.append("\tfunction initGrid(){\n"+
-		        "\t\t$(\"div[name='list']\",mainDiv).height(mainDiv.height()-\n"+
-				"\t\t\t$(\"form[name='search_form']\",mainDiv).height()-$(\"div[name='btn_div']\",mainDiv).height()-10);\n"+
+		        "\t\t$(\"div.list\",mainDiv).height(mainDiv.height()-\n"+
+				"\t\t\t$(\"form[name='search_form']\",mainDiv).height()-$(\"div.btn_div\",mainDiv).height()-10);\n"+
 		        "\t\tvar jsonData=$(\"form[name='search_form']\",mainDiv).toJSON();\n"+
 		        "\t\t$.EasyUI.DataGrid({\n"+
 			    "\t\t\tgridId:mainDivList,\n"+
@@ -153,35 +460,38 @@ public class DatabaseUtils {
 				"\t\t\t\t\ttype:\"get\",\n"+
 				"\t\t\t\t\twidth:950,\n"+
 				"\t\t\t\t\theight:800,\n"+
-				"\t\t\t\t\ttitle:\"修改\"\n"+
+				"\t\t\t\t\ttitle:\"查询详情\"\n"+
 				"\t\t\t\t});\n"+
 			    "\t\t\t},\n")
 			.append("\t\t\tcolumns: [");
 		StringBuffer sb = new StringBuffer("[{\n\t\t\t\tfield: 'CK',\n\t\t\t\ttitle: '',\n\t\t\t\tcheckbox: true,\n\t\t\t\twidth: 30\n\t\t\t}");
 		for(ColumnDTO dto:page.getRows()){
 			sb.append(",{\n\t\t\t\tfield: \""+dto.getColumnName()+"\",\n\t\t\t\ttitle: \""+
-					(dto.getColumnComment()==null||dto.getColumnComment().trim().equals("")?dto.getJavaName():dto.getColumnComment())+
+					dto.getShowComment()+
 					"\",\n\t\t\t\twidth: 100,\n\t\t\t\talign:  \"center\",\n\t\t\t\tsortable: true");
-			String dataType = sqlTypeToJavaType(dto.getDataType()).trim().toLowerCase();
 			if(!dto.getColumnName().toLowerCase().equals(dto.getJavaName().toLowerCase())){
 				sb.append(",\n\t\t\t\tformatter:function(value,row){\n\t\t\t\t\t");
-				if(dataType.equals("date")){
+				if(dto.getDataType().equals("date")){
 					sb.append("return $.cms.toDate(row."+dto.getJavaName()+");");
-				}else if(dataType.equals("datetime")){
+				}else if(dto.getDataType().equals("datetime")){
 					sb.append("return $.cms.toDateTime(row."+dto.getJavaName()+");");
+				}else if(dto.getColumnName().trim().toLowerCase().startsWith("is_")){
+					sb.append("return row."+dto.getJavaName()+"==1?\"是\":\"否\";");
 				}else{
 					sb.append("return row."+dto.getJavaName()+";");
 				}
+				sb.append("\n\t\t\t\t}");
 			}else{
-				if(dataType.equals("date")){
+				if(dto.getDataType().equals("date")){
 					sb.append(",\n\t\t\t\tformatter:function(value,row){\n\t\t\t\t\t");
 					sb.append("return $.cms.toDate(row."+dto.getJavaName()+");");
-				}else if(dataType.equals("datetime")){
+					sb.append("\n\t\t\t\t}");
+				}else if(dto.getDataType().equals("datetime")){
 					sb.append(",\n\t\t\t\tformatter:function(value,row){\n\t\t\t\t\t");
 					sb.append("return $.cms.toDateTime(row."+dto.getJavaName()+");");
+					sb.append("\n\t\t\t\t}");
 				}
 			}
-			sb.append("\n\t\t\t\t}");
 			sb.append("\n\t\t\t}");
 		}
 		sb.append("]]\n");
@@ -192,18 +502,23 @@ public class DatabaseUtils {
 	}
 	public static StringBuffer toIndexHtml(PageDTO<ColumnDTO> page,String tableName){
 		StringBuffer indexHtml = new StringBuffer("");
+		indexHtml.append("<%@ page language=\"java\" contentType=\"text/html; charset=UTF-8\"\n"+
+				"\tpageEncoding=\"UTF-8\"%>\n"+
+				"<script type=\"text/javascript\" src=\"${pageContext.request.contextPath}/js/"+javaTableName1+"/index.js\"></script>\n");
 		indexHtml.append("<div id=\"cms_"+htmlName+"_main_div\" style=\"width: 100%; height: 468px;\">\n")
 			.append("\t<form name=\"search_form\" class=\"search_form\">\n")
 			.append("\t\t<table>\n\t\t\t<tbody>\n\t\t\t\t<tr>\n");
 		StringBuffer searchSb = new StringBuffer("");
-		searchSb.append("\t\t\t\t\t<a name=\"search\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-search'\" style=\"width:100px\">搜 索</a>\n")
-			.append("\t\t\t\t\t<a name=\"reset\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-reload'\" style=\"width:100px\">重置</a>");
+		searchSb.append("\t\t\t\t\t\t<a name=\"search\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-search'\" style=\"width:100px\">搜 索</a>\n")
+			.append("\t\t\t\t\t\t<a name=\"reset\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-reload'\" style=\"width:100px\">重置</a>");
 		List<StringBuffer> list = new ArrayList<StringBuffer>();
 		for(ColumnDTO dto:page.getRows()){
 			if(!dto.getColumnName().toLowerCase().trim().equals("gmt_create")&&
-					!dto.getColumnName().toLowerCase().trim().equals("gmt_modified")){
+					!dto.getColumnName().toLowerCase().trim().equals("gmt_modified")&&
+					!dto.getColumnName().toLowerCase().trim().equals("is_deleted")&&
+					!dto.getColumnName().toLowerCase().trim().equals("sort_num")){
 				StringBuffer sb = new StringBuffer("");
-				sb.append("\t\t\t\t\t<td>"+dto.getJavaName()+":</td>\n")
+				sb.append("\t\t\t\t\t<td>"+dto.getShowComment()+":</td>\n")
 					.append("\t\t\t\t\t<td><input class=\"easyui-textbox\" name=\""+dto.getJavaName()+"\" /></td>\n");
 				list.add(sb);
 			}
@@ -229,7 +544,7 @@ public class DatabaseUtils {
 				StringBuffer sb1 = new StringBuffer("");
 				sb1.append("\t\t\t\t</tr>\n")
 					.append("\t\t\t\t<tr>\n");
-				list.add(4*(i+1),sb1);
+				list.add(5*i+4,sb1);
 			}
 			StringBuffer sb = new StringBuffer("");
 			sb.append("\t\t\t\t\t<td colspan=\""+((size/4+1)*8-size*2)+"\">\n")
@@ -237,7 +552,7 @@ public class DatabaseUtils {
 			list.add(sb);
 		}
 		StringBuffer sb1 = new StringBuffer("");
-		sb1.append("\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</form>\n");
+		sb1.append("\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</form>\n");
 		list.add(sb1);
 		
 		StringBuffer operateSb = new StringBuffer("");
@@ -280,6 +595,7 @@ public class DatabaseUtils {
 			controllerSb.append("\t\treturn ROOT_PATH + \"index\";\n");
 			controllerSb.append("\t}\n\n");
 			controllerSb.append("\t@RequestMapping(value=\"list\")\n");
+			controllerSb.append("\t@ResponseBody\n");
 			controllerSb.append("\tpublic PageDTO<"+javaTableName+"PO> list("+javaTableName+"VO vo){\n");
 			controllerSb.append("\t\treturn "+javaTableName1+"ServiceImpl.list(vo);\n");
 			controllerSb.append("\t}\n\n");
@@ -405,14 +721,14 @@ public class DatabaseUtils {
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 添加数据 \n");
-			interfaceSb.append("\t * @params po \n");
+			interfaceSb.append("\t * @param po \n");
 			interfaceSb.append("\t * @return ResultDTO<String> \n\t**/\n");
 			interfaceSb.append("\tResultDTO<String> add("+javaTableName+"PO po);\n");
 			interfaceSb.append("\t/**\n");
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 修改数据 \n");
-			interfaceSb.append("\t * @params po \n");
+			interfaceSb.append("\t * @param po \n");
 			interfaceSb.append("\t * @return ResultDTO<String> \n\t**/\n");
 			interfaceSb.append("\tResultDTO<String> update("+javaTableName+"PO po);\n");
 			interfaceSb.append("\t/**\n");
@@ -421,11 +737,11 @@ public class DatabaseUtils {
 			interfaceSb.append("\t * @description 删除数据 \n");
 			
 			if(deletedFlag){//true为真删除   false为假删除
-				interfaceSb.append("\t * @params id 真删除 \n");
+				interfaceSb.append("\t * @param id 真删除 \n");
 				interfaceSb.append("\t * @return ResultDTO<String> \n\t**/\n");
 				interfaceSb.append("\tResultDTO<String> delete(Integer id);\n");
 			}else{
-				interfaceSb.append("\t * @params po 假删除 删除标志置为1\n");
+				interfaceSb.append("\t * @param po 假删除 删除标志置为1\n");
 				interfaceSb.append("\t * @return ResultDTO<String> \n\t**/\n");
 				interfaceSb.append("\tResultDTO<String> delete("+javaTableName+"PO po);\n");
 			}
@@ -433,14 +749,14 @@ public class DatabaseUtils {
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 根据id获取数据详情 \n");
-			interfaceSb.append("\t * @params id \n");
+			interfaceSb.append("\t * @param id \n");
 			interfaceSb.append("\t * @return ResultDTO<"+javaTableName+"PO> \n\t**/\n");
 			interfaceSb.append("\tResultDTO<"+javaTableName+"PO> detail(Integer id);\n");
 			interfaceSb.append("\t/**\n");
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 获取分页数据源 \n");
-			interfaceSb.append("\t * @params vo \n");
+			interfaceSb.append("\t * @param vo \n");
 			interfaceSb.append("\t * @return PageDTO<"+javaTableName+"PO> \n\t**/\n");
 			interfaceSb.append("\tPageDTO<"+javaTableName+"PO> list("+javaTableName+"VO vo);\n}");
 			return interfaceSb;
@@ -461,7 +777,7 @@ public class DatabaseUtils {
 					mapperSb.append("\t\t<result column=\""+dto.getColumnName()+"\" property=\""+dto.getJavaName()+"\" />\n");
 				}
 			}
-			mapperSb.append("\t<insert id=\"add\" parameterType=\""+javaTableName+"PO\" useGeneratedKeys=\"true\" keyProperty=\"id\">\n");
+			mapperSb.append("\t</resultMap>\n\t<insert id=\"add\" parameterType=\""+javaTableName+"PO\" useGeneratedKeys=\"true\" keyProperty=\"id\">\n");
 			mapperSb.append("\t\tinsert\n\t\t\tinto\n\t\t\t\t"+tableName+"(\n");
 			for(ColumnDTO dto:page.getRows()){
 				if(!dto.getExtra().toLowerCase().trim().equals("auto_increment")){
@@ -474,7 +790,7 @@ public class DatabaseUtils {
 			for(ColumnDTO dto:page.getRows()){
 				if(!dto.getExtra().toLowerCase().trim().equals("auto_increment")){
 					if(dto.getColumnName().trim().toLowerCase().equals("is_deleted")){
-						mapperSb.append("\t\t\t1,\n");
+						mapperSb.append("\t\t\t0,\n");
 					}else if(dto.getDataType().trim().toLowerCase().equals("datetime")){
 						mapperSb.append("\t\t\tCURRENT_TIMESTAMP(),\n");
 					}else if(dto.getDataType().trim().toLowerCase().equals("date")){
@@ -533,7 +849,7 @@ public class DatabaseUtils {
 			mapperSb.append("\t</sql>\n");
 			mapperSb.append("\t<select id=\"list\" parameterType=\""+javaTableName+"VO\" resultMap=\""+javaTableName1+"PO\">\n");
 			mapperSb.append("\t\tselect \n\t\t\t*\n\t\tfrom\n\t\t\t"+tableName+"\n");
-			mapperSb.append("\t\t\t<include refid=\"listByCondition\"/> \n\t\t\tlimit #{start},#{pageSize};\n");
+			mapperSb.append("\t\t\t<include refid=\"listByCondition\"/> \n");
 			
 			mapperSb.append("\t\t\t<if test=\"sort!=null and sort!=''\">\n");
 			mapperSb.append("\t\t\t\torder by ${sort} ${order} \n");
@@ -551,7 +867,7 @@ public class DatabaseUtils {
 			mapperSb.append("\t\tselect \n\t\t\tcount(1)\n\t\tfrom\n\t\t\t"+tableName+"\n");
 			mapperSb.append("\t\t\t<include refid=\"listByCondition\"/>\n");
 			mapperSb.append("\t</select>\n");
-			mapperSb.append("</resultMap>\n");
+			mapperSb.append("</mapper>\n");
 			return mapperSb;
 		}
 		return null;
@@ -563,14 +879,14 @@ public class DatabaseUtils {
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 添加数据 \n");
-			interfaceSb.append("\t * @params po \n");
+			interfaceSb.append("\t * @param po \n");
 			interfaceSb.append("\t * @return Boolean true 添加成功,false 添加失败 \n\t**/\n");
 			interfaceSb.append("\tBoolean add("+javaTableName+"PO po);\n");
 			interfaceSb.append("\t/**\n");
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 修改数据 \n");
-			interfaceSb.append("\t * @params po \n");
+			interfaceSb.append("\t * @param po \n");
 			interfaceSb.append("\t * @return Boolean true 修改成功,false 修改失败 \n\t**/\n");
 			interfaceSb.append("\tBoolean update("+javaTableName+"PO po);\n");
 			interfaceSb.append("\t/**\n");
@@ -579,11 +895,11 @@ public class DatabaseUtils {
 			interfaceSb.append("\t * @description 删除数据 \n");
 			
 			if(deletedFlag){//true为真删除   false为假删除
-				interfaceSb.append("\t * @params id 真删除 \n");
+				interfaceSb.append("\t * @param id 真删除 \n");
 				interfaceSb.append("\t * @return Boolean true 修改成功,false 修改失败 \n\t**/\n");
 				interfaceSb.append("\tBoolean delete(Integer id);\n");
 			}else{
-				interfaceSb.append("\t * @params po 假删除 删除标志置为1\n");
+				interfaceSb.append("\t * @param po 假删除 删除标志置为1\n");
 				interfaceSb.append("\t * @return Boolean true 修改成功,false 修改失败 \n\t**/\n");
 				interfaceSb.append("\tBoolean delete("+javaTableName+"PO po);\n");
 			}
@@ -591,21 +907,21 @@ public class DatabaseUtils {
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 根据id获取数据详情 \n");
-			interfaceSb.append("\t * @params id \n");
+			interfaceSb.append("\t * @param id \n");
 			interfaceSb.append("\t * @return "+javaTableName+"PO \n\t**/\n");
 			interfaceSb.append("\t"+javaTableName+"PO detail(Integer id);\n");
 			interfaceSb.append("\t/**\n");
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 获取分页数据源 \n");
-			interfaceSb.append("\t * @params vo \n");
+			interfaceSb.append("\t * @param vo \n");
 			interfaceSb.append("\t * @return List<"+javaTableName+"PO> \n\t**/\n");
 			interfaceSb.append("\tList<"+javaTableName+"PO> list("+javaTableName+"VO vo);\n");
 			interfaceSb.append("\t/**\n");
 			interfaceSb.append("\t * @author fisher \n");
 			interfaceSb.append("\t * @date "+DateUtil.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_CN)+"\n");
 			interfaceSb.append("\t * @description 获取数据源总条数 \n");
-			interfaceSb.append("\t * @params vo \n");
+			interfaceSb.append("\t * @param vo \n");
 			interfaceSb.append("\t * @return Long \n\t**/\n");
 			interfaceSb.append("\tLong count("+javaTableName+"VO vo);\n}");
 			return interfaceSb;
@@ -628,7 +944,7 @@ public class DatabaseUtils {
 			for(ColumnDTO dto:page.getRows()){
 				String columnName = dto.getJavaName();
 				String colFunName = (""+columnName.charAt(0)).toUpperCase()+columnName.substring(1);
-				String javaType = sqlTypeToJavaType(dto.getDataType());
+				String javaType = sqlTypeToJavaType(dto.getColumnName(),dto.getDataType());
 				if(javaType.equals("Date")){
 					flag = true;
 				}
@@ -674,7 +990,7 @@ public class DatabaseUtils {
 			for(ColumnDTO dto:page.getRows()){
 				String columnName = dto.getJavaName();
 				String colFunName = (""+columnName.charAt(0)).toUpperCase()+columnName.substring(1);
-				String javaType = sqlTypeToJavaType(dto.getDataType());
+				String javaType = sqlTypeToJavaType(dto.getColumnName(),dto.getDataType());
 				if(javaType.equals("Date")){
 					flag = true;
 				}
@@ -725,8 +1041,11 @@ public class DatabaseUtils {
 		javaName = (""+javaName.charAt(0)).toLowerCase()+javaName.substring(1);
 		return javaName;
 	}
-	public static String sqlTypeToJavaType(String sqlType){
+	public static String sqlTypeToJavaType(String name,String sqlType){
 		sqlType = sqlType.toLowerCase();
+		if(name.trim().toLowerCase().startsWith("is_")){
+			return "Boolean";
+		}
 		String javaType = "";
 		switch(sqlType){
 			case "int":
@@ -780,11 +1099,11 @@ public class DatabaseUtils {
 	public static void main(String[] args) {
 		PageDTO<ColumnDTO> page = new PageDTO<ColumnDTO>();
 		List<ColumnDTO> list = new ArrayList<>();
-		List<String> columnNameList = Arrays.asList("id","name","title","description","sort_num","is_deleted","gmt_create","gmt_modified","operator");
-		List<String> dataTypeList = Arrays.asList("integer","varchar","varchar","text","tinyint","tinyint","datetime","date","integer");
-		List<String> keyList = Arrays.asList("PRI","UNIQUE","","","","","","","");
-		List<String> commentList = Arrays.asList("逐渐","名称","标题","描述","排序号","是否删除","创建时间","最后修改时间","最后操作人");
-		List<String> extraList = Arrays.asList("auto_increment","","","","","","","","");
+		List<String> columnNameList = Arrays.asList("id","name","title","description","sort_num","is_deleted","create","endTime","gmt_create","gmt_modified","operator");
+		List<String> dataTypeList = Arrays.asList("integer","varchar","varchar","text","tinyint","tinyint","date","datetime","datetime","date","integer");
+		List<String> keyList = Arrays.asList("PRI","UNIQUE","","","","","","","","","");
+		List<String> commentList = Arrays.asList("逐渐","名称","标题","描述","排序号 从大到小排序","是否删除 1是0否","创建","结束时间","创建时间","最后修改时间","最后操作人");
+		List<String> extraList = Arrays.asList("auto_increment","","","","","","","","","","");
 		for(int i=0; i<columnNameList.size(); i++){
 			ColumnDTO dto = new ColumnDTO();
 			dto.setColumnName(columnNameList.get(i));
