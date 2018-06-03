@@ -1099,26 +1099,31 @@ public class DatabaseUtils {
 		return javaType;
 	}
 	public static void main(String[] args) {
-		PageDTO<ColumnDTO> page = new PageDTO<ColumnDTO>();
-		List<ColumnDTO> list = new ArrayList<>();
-		List<String> columnNameList = Arrays.asList("id","name","title","description","sort_num","is_deleted","create","endTime","gmt_create","gmt_modified","operator");
-		List<String> dataTypeList = Arrays.asList("integer","varchar","varchar","text","tinyint","tinyint","date","datetime","datetime","date","integer");
-		List<String> keyList = Arrays.asList("PRI","UNIQUE","","","","","","","","","");
-		List<String> commentList = Arrays.asList("逐渐","名称","标题","描述","排序号 从大到小排序","是否删除 1是0否","创建","结束时间","创建时间","最后修改时间","最后操作人");
-		List<String> extraList = Arrays.asList("auto_increment","","","","","","","","","","");
-		for(int i=0; i<columnNameList.size(); i++){
-			ColumnDTO dto = new ColumnDTO();
-			dto.setColumnName(columnNameList.get(i));
-			dto.setDataType(dataTypeList.get(i));
-			dto.setColumnComment(commentList.get(i));
-			dto.setColumnKey(keyList.get(i));
-			dto.setColumnType("");
-			dto.setExtra(extraList.get(i));
-			list.add(dto);
-		}
-		page.setRows(list);
-		String tableName = "tb_image_info";
-//		System.out.println(toController(page,tableName));;
-		export(page,tableName);
+//		PageDTO<ColumnDTO> page = new PageDTO<ColumnDTO>();
+//		List<ColumnDTO> list = new ArrayList<>();
+//		List<String> columnNameList = Arrays.asList("id","name","title","description","sort_num","is_deleted","create","endTime","gmt_create","gmt_modified","operator");
+//		List<String> dataTypeList = Arrays.asList("integer","varchar","varchar","text","tinyint","tinyint","date","datetime","datetime","date","integer");
+//		List<String> keyList = Arrays.asList("PRI","UNIQUE","","","","","","","","","");
+//		List<String> commentList = Arrays.asList("逐渐","名称","标题","描述","排序号 从大到小排序","是否删除 1是0否","创建","结束时间","创建时间","最后修改时间","最后操作人");
+//		List<String> extraList = Arrays.asList("auto_increment","","","","","","","","","","");
+//		for(int i=0; i<columnNameList.size(); i++){
+//			ColumnDTO dto = new ColumnDTO();
+//			dto.setColumnName(columnNameList.get(i));
+//			dto.setDataType(dataTypeList.get(i));
+//			dto.setColumnComment(commentList.get(i));
+//			dto.setColumnKey(keyList.get(i));
+//			dto.setColumnType("");
+//			dto.setExtra(extraList.get(i));
+//			list.add(dto);
+//		}
+//		page.setRows(list);
+//		String tableName = "tb_image_info";
+////		System.out.println(toController(page,tableName));;
+//		export(page,tableName);
+		String sql = "select id,name,download_url,image_url from tb_font";
+		System.out.println(sql.lastIndexOf(" from "));
+		sql = sql.substring(sql.lastIndexOf(" from "));
+		sql = "select count(1)"+sql;
+		System.out.println(sql);
 	}
 }

@@ -55,4 +55,13 @@ public class TableServiceImpl implements TableService {
 		// TODO Auto-generated method stub
 		return new ResultDTO<Map<String, Object>>(tableDao.dataDetail(database, tableName, priKey, priValue));
 	}
+	@Override
+	public ResultDTO<String> addData(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		Boolean flag = tableDao.addData(map);
+		if( flag ){
+			return new ResultDTO<String>();
+		}
+		return new ResultDTO<String>("12345","添加失败");
+	}
 }
