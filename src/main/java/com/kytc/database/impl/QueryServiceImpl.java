@@ -25,6 +25,9 @@ public class QueryServiceImpl implements QueryService {
 	public PageDTO<Map<String, Object>> list(String sql, Integer page, Integer rows) {
 		// TODO Auto-generated method stub
 		sql = sql.trim();
+		if(sql.endsWith(";")){
+			sql = sql.substring(0,sql.length()-1);
+		}
 		String listSql = sql;
 		String countSql = sql;
 		Integer start = 0;
@@ -35,10 +38,13 @@ public class QueryServiceImpl implements QueryService {
 			start = (page-1)*rows;
 		}
 		PageDTO<Map<String, Object>> pageDTO = new PageDTO<Map<String, Object>>();
-		System.out.println(page);
 		if(listSql.length()-listSql.lastIndexOf(" limit ")>15){
 			listSql += " limit #{start},#{pageSize}";
-			countSql = "select count(1) "+countSql.substring(countSql.lastIndexOf(" from "));
+			if(countSql.trim().toLowerCase().contains(" group by ")){
+				countSql = "select count(1) from ("+sql+") t";
+			}else{
+				countSql = "select count(1) "+countSql.substring(countSql.lastIndexOf(" from "));
+			}
 			List<Map<String, Object>> list = queryDao.list(listSql,start,rows);
 			pageDTO.setRows(list);
 			pageDTO.setTotal(queryDao.count(countSql));
@@ -96,26 +102,26 @@ public class QueryServiceImpl implements QueryService {
 				if(!categoryList.contains(dto.getCategory())){
 					categoryList.add(dto.getCategory());
 				}
-				if(!titleList.contains(dto.getTitle())){
-					titleList.add(dto.getTitle());
+				if(!titleList.contains(dto.getxTitle())){
+					titleList.add(dto.getxTitle());
 				}
 			}
-			for(int i=0;i<titleList.size();i++){
+			for(int i=0;i<categoryList.size();i++){
 				valueList.add(new ArrayList<Double>());
 			}
 			List<List<ReportDTO>> reportList = new ArrayList<List<ReportDTO>>();
-			for(int i=0;i<titleList.size();i++){
+			for(int i=0;i<categoryList.size();i++){
 				reportList.add(new ArrayList<ReportDTO>());
 			}
 			for(ReportDTO dto:list){
-				reportList.get(titleList.indexOf(dto.getTitle())).add(dto);
+				reportList.get(categoryList.indexOf(dto.getCategory())).add(dto);
 			}
 			int j=0;
 			for(List<ReportDTO> list1:reportList){
 				int i=0;
 				for(ReportDTO dto:list1){
-					for(;i<categoryList.size();){
-						if(dto.getCategory().equals(categoryList.get(i))){
+					for(;i<titleList.size();){
+						if(dto.getxTitle().equals(titleList.get(i))){
 							valueList.get(j).add(dto.getValue());
 							i=i+1;
 							break;
@@ -128,22 +134,27 @@ public class QueryServiceImpl implements QueryService {
 				j++;
 			}
 			for(List<Double> list1:valueList){
-				for(int i=list1.size();i<categoryList.size();i++){
+				for(int i=list1.size();i<titleList.size();i++){
 					list1.add(0d);
 				}
 			}
 		}
 		Map<String,Object> result = new HashMap<String,Object>();
-		result.put("category", categoryList);
+		result.put("category", titleList);
 		List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>();
-		for(int i=0;i<titleList.size();i++){
+		for(int i=0;i<categoryList.size();i++){
 			Map<String,Object> map1 = new HashMap<String,Object>();
-			map1.put("name", titleList.get(i));
+			map1.put("name", categoryList.get(i));
 			map1.put("data", valueList.get(i));
 			mapList.add(map1);
 		}
+		if(list!=null&&list.size()>0){
+			result.put("title", list.get(0).getTitle());
+			result.put("yTitle", list.get(0).getyTitle());
+			result.put("xTitle", list.get(0).getxList());
+			result.put("subTitle", list.get(0).getSubTitle());
+		}
 		result.put("series", mapList);
-		System.out.println(result);
 		return result;
 	}
 
