@@ -24,7 +24,7 @@ public class QueryServiceImpl implements QueryService {
 	@Override
 	public PageDTO<Map<String, Object>> list(String sql, Integer page, Integer rows) {
 		// TODO Auto-generated method stub
-		sql = sql.trim();
+		sql = sql.trim().toLowerCase();
 		if(sql.endsWith(";")){
 			sql = sql.substring(0,sql.length()-1);
 		}
@@ -38,7 +38,8 @@ public class QueryServiceImpl implements QueryService {
 			start = (page-1)*rows;
 		}
 		PageDTO<Map<String, Object>> pageDTO = new PageDTO<Map<String, Object>>();
-		if(listSql.length()-listSql.lastIndexOf(" limit ")>15){
+		System.out.println(listSql);
+		if(listSql.length()-listSql.trim().toLowerCase().lastIndexOf(" limit ")>15){
 			listSql += " limit #{start},#{pageSize}";
 			if(countSql.trim().toLowerCase().contains(" group by ")){
 				countSql = "select count(1) from ("+sql+") t";
@@ -59,7 +60,14 @@ public class QueryServiceImpl implements QueryService {
 	@Override
 	public List<Map<String, Object>> listOne(String sql) {
 		// TODO Auto-generated method stub
-		sql += " limit 1";
+		sql = sql.trim().toLowerCase();
+		if(sql.length()-sql.lastIndexOf(" limit ")>15){
+			sql += " limit 1";
+		}else{
+			sql = sql.substring(0, sql.lastIndexOf(" limit "))+" limit 1";
+		}
+		
+		
 		Map<String, Object> map = queryDao.listOne(sql);
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		if (map != null) {
