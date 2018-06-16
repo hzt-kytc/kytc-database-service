@@ -59,4 +59,12 @@ public interface TableService {
 	 * @return
 	 */
 	ResultDTO<String> addData(Map<String,Object> map);
+	/**
+	 * @author fisher
+	 * @description 修改表数据
+	 * @date 2018年6月16日下午6:26:52
+	 * @param map
+	 * @return
+	 */
+	ResultDTO<String> updateData(Map<String,Object> map);
 }

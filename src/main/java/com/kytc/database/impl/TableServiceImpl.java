@@ -64,4 +64,13 @@ public class TableServiceImpl implements TableService {
 		}
 		return new ResultDTO<String>("12345","添加失败");
 	}
+	@Override
+	public ResultDTO<String> updateData(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		Boolean flag = tableDao.updateData(map);
+		if( flag ){
+			return new ResultDTO<String>();
+		}
+		return new ResultDTO<String>("12345","修改失败");
+	}
 }
