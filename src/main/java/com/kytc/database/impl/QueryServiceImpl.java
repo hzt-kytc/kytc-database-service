@@ -6,19 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.kytc.database.dao.QueryDao;
 import com.kytc.database.dto.ReportDTO;
 import com.kytc.database.service.QueryService;
 import com.kytc.dto.PageDTO;
 
-@Component
-@Resource(name = "queryServiceImpl")
+@Service("queryServiceImpl")
 public class QueryServiceImpl implements QueryService {
-	@Resource(name = "queryDao")
+	@Autowired
 	private QueryDao queryDao;
 
 	@Override

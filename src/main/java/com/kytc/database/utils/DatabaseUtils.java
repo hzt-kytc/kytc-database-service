@@ -183,6 +183,7 @@ public class DatabaseUtils {
 		detailHtml.append(zhuanyi(2)+"<tr>"+
 				zhuanyi(3)+"<td colspan=\""+size+"\">"+
 				zhuanyi(4)+"<div class=\"btn_div\">"+
+				zhuanyi(5)+"<a name=\"save\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-save'\">保存</a>"+
 				zhuanyi(5)+"<a name=\"close\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-close'\">关闭</a>"+
 				zhuanyi(4)+"</div>"+
 				zhuanyi(3)+"</td>"+
@@ -248,6 +249,7 @@ public class DatabaseUtils {
 		detailHtml.append(zhuanyi(2)+"<tr>"+
 				zhuanyi(3)+"<td colspan=\""+size+"\">"+
 				zhuanyi(4)+"<div class=\"btn_div\">"+
+				zhuanyi(5)+"<a name=\"save\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-save'\">关闭</a>"+
 				zhuanyi(5)+"<a name=\"close\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-close'\">关闭</a>"+
 				zhuanyi(4)+"</div>"+
 				zhuanyi(3)+"</td>"+
@@ -827,6 +829,7 @@ public class DatabaseUtils {
 			if(deletedFlag){
 				mapperSb.append("\t<delete id=\"delete\" parameterType=\"Integer\" >\n");
 				mapperSb.append("\t\tdelete \n\t\t\tfrom \n\t\t\t\t"+tableName+"\n\t\twhere \n\t\t\t"+id+" = #{id};");
+				mapperSb.append("\t</delete>\n");
 			}else{
 				mapperSb.append("\t<update id=\"delete\" parameterType=\""+javaTableName+"PO\">\n");
 				mapperSb.append("\t\tupdate \n\t\t\t"+tableName+"\n\t\tset\n");
