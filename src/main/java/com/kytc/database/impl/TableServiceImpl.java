@@ -73,4 +73,14 @@ public class TableServiceImpl implements TableService {
 		}
 		return new ResultDTO<String>("12345","修改失败");
 	}
+	@Override
+	public ResultDTO<String> delete(String database, String tableName,
+			String priKey, String priValue) {
+		// TODO Auto-generated method stub
+		Boolean flag = tableDao.deleteData(database, tableName, priKey, priValue);
+		if( flag ){
+			return new ResultDTO<String>();
+		}
+		return new ResultDTO<String>("12345","删除失败");
+	}
 }

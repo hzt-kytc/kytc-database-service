@@ -53,6 +53,17 @@ public interface TableService {
 	ResultDTO<Map<String,Object>> dataDetail(String database, String tableName,String priKey,String priValue);
 	/**
 	 * @author fisher
+	 * @description 删除数据
+	 * @date 2018年6月16日下午11:08:34
+	 * @param database
+	 * @param tableName
+	 * @param priKey
+	 * @param priValue
+	 * @return
+	 */
+	ResultDTO<String> delete(String database, String tableName,String priKey,String priValue);
+	/**
+	 * @author fisher
 	 * @description 添加数据
 	 * @date 2018年6月2日下午9:42:01
 	 * @param map
