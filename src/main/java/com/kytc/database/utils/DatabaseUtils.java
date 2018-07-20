@@ -269,7 +269,7 @@ public class DatabaseUtils {
 		int size = 4;
 		String width1 = " style=\"width:15%;\"";
 		String width2 = " style=\"width:35%;\"";
-		if(page.getRows().size()>20){
+		if(page.getRows().size()>10){
 			size = 4;
 			detailHtml.append(zhuanyi(1)+"<table class=\"d_table\">");
 		}else{
@@ -512,8 +512,8 @@ public class DatabaseUtils {
 			.append("\t<form name=\"search_form\" class=\"search_form\">\n")
 			.append("\t\t<table>\n\t\t\t<tbody>\n\t\t\t\t<tr>\n");
 		StringBuffer searchSb = new StringBuffer("");
-		searchSb.append("\t\t\t\t\t\t<a name=\"search\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-search'\" style=\"width:100px\">搜 索</a>\n")
-			.append("\t\t\t\t\t\t<a name=\"reset\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-reload'\" style=\"width:100px\">重置</a>");
+		searchSb.append("\t\t\t\t\t\t<a name=\"search\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-search'\" style=\"width:100px;height:32px;\">搜 索</a>\n")
+			.append("\t\t\t\t\t\t<a name=\"reset\" href=\"#\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-reload'\" style=\"width:100px;height:32px;\">重置</a>");
 		List<StringBuffer> list = new ArrayList<StringBuffer>();
 		for(ColumnDTO dto:page.getRows()){
 			if(!dto.getColumnName().toLowerCase().trim().equals("gmt_create")&&
@@ -529,12 +529,12 @@ public class DatabaseUtils {
 		int size = list.size();
 		if(size<3){
 			StringBuffer sb = new StringBuffer("");
-			sb.append("\t\t\t\t\t<td colspan=\""+(6-list.size()*2)+"\">\n")
+			sb.append("\t\t\t\t\t<td colspan=\""+(6-list.size()*2)+"\" align=\"center\">\n")
 				.append(searchSb);
 			list.add(sb);
 		}else if(size<6){
 			StringBuffer sb = new StringBuffer("");
-			sb.append("\t\t\t\t\t<td colspan=\""+(12-list.size()*2)+"\">\n")
+			sb.append("\t\t\t\t\t<td colspan=\""+(12-list.size()*2)+"\" align=\"center\">\n")
 				.append(searchSb);
 			list.add(sb);
 			
@@ -550,7 +550,7 @@ public class DatabaseUtils {
 				list.add(5*i+4,sb1);
 			}
 			StringBuffer sb = new StringBuffer("");
-			sb.append("\t\t\t\t\t<td colspan=\""+((size/4+1)*8-size*2)+"\">\n")
+			sb.append("\t\t\t\t\t<td colspan=\""+((size/4+1)*8-size*2)+"\" align=\"center\">\n")
 				.append(searchSb);
 			list.add(sb);
 		}
@@ -576,7 +576,6 @@ public class DatabaseUtils {
 		for(StringBuffer sb:list){
 			indexHtml.append(sb);
 		}
-		System.out.println(indexHtml.toString());
 		return indexHtml;
 	}
 	public static StringBuffer toController(PageDTO<ColumnDTO> page,String tableName){
@@ -699,11 +698,11 @@ public class DatabaseUtils {
 			implSb.append("\t\t}\n");
 			implSb.append("\t}\n");
 			implSb.append("\t@Override\n");
-			implSb.append("\tResultDTO<"+javaTableName+"PO> detail(Integer id){\n");
+			implSb.append("\tpublic ResultDTO<"+javaTableName+"PO> detail(Integer id){\n");
 			implSb.append("\t\treturn new ResultDTO<"+javaTableName+"PO>("+javaTableName1+"Dao.detail(id));\n");
 			implSb.append("\t}\n");
 			implSb.append("\t@Override\n");
-			implSb.append("\tPageDTO<"+javaTableName+"PO> list("+javaTableName+"VO vo){\n");
+			implSb.append("\tpublic PageDTO<"+javaTableName+"PO> list("+javaTableName+"VO vo){\n");
 			
 			implSb.append("\t\tvo.initStart();\n");
 			implSb.append("\t\tPageDTO<"+javaTableName+"PO> page = new PageDTO<"+javaTableName+"PO>();\n");
@@ -828,7 +827,7 @@ public class DatabaseUtils {
 			//删除
 			if(deletedFlag){
 				mapperSb.append("\t<delete id=\"delete\" parameterType=\"Integer\" >\n");
-				mapperSb.append("\t\tdelete \n\t\t\tfrom \n\t\t\t\t"+tableName+"\n\t\twhere \n\t\t\t"+id+" = #{id};");
+				mapperSb.append("\t\tdelete \n\t\t\tfrom \n\t\t\t\t"+tableName+"\n\t\twhere \n\t\t\t"+id+" = #{id};\n");
 				mapperSb.append("\t</delete>\n");
 			}else{
 				mapperSb.append("\t<update id=\"delete\" parameterType=\""+javaTableName+"PO\">\n");
