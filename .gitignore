@@ -43,6 +43,7 @@ Thumbs.db
 
 # Build output directies
 /target
+<<<<<<< HEAD
 /settings
 ./settings
 */target
@@ -78,3 +79,38 @@ out
 
 # Subversion directory #
 .svn
+=======
+*/target
+/build
+*/build
+/log
+*loga*
+/logs
+*/logs*
+/text
+*/text*
+# IntelliJ specific files/directories
+out
+.idea
+*/*.idea
+*.ipr
+*.iws
+*.iml
+/*.iml
+*/*.iml
+
+
+# Eclipse specific files/directories
+.classpath
+.project
+.settings
+.metadata
+.myeclipse
+.factorypath
+
+# NetBeans specific files/directories
+.nbattrs
+
+# Subversion directory #
+.svn
+>>>>>>> branch 'master' of https://github.com/hzt-kytc/kytc-database-service.git

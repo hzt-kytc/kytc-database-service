@@ -49,4 +49,38 @@ public class TableServiceImpl implements TableService {
 		DatabaseUtils.export(page, tableName);
 		return new ResultDTO<String>();
 	}
+	@Override
+	public ResultDTO<Map<String, Object>> dataDetail(String database,
+			String tableName, String priKey, String priValue) {
+		// TODO Auto-generated method stub
+		return new ResultDTO<Map<String, Object>>(tableDao.dataDetail(database, tableName, priKey, priValue));
+	}
+	@Override
+	public ResultDTO<String> addData(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		Boolean flag = tableDao.addData(map);
+		if( flag ){
+			return new ResultDTO<String>();
+		}
+		return new ResultDTO<String>("12345","添加失败");
+	}
+	@Override
+	public ResultDTO<String> updateData(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		Boolean flag = tableDao.updateData(map);
+		if( flag ){
+			return new ResultDTO<String>();
+		}
+		return new ResultDTO<String>("12345","修改失败");
+	}
+	@Override
+	public ResultDTO<String> delete(String database, String tableName,
+			String priKey, String priValue) {
+		// TODO Auto-generated method stub
+		Boolean flag = tableDao.deleteData(database, tableName, priKey, priValue);
+		if( flag ){
+			return new ResultDTO<String>();
+		}
+		return new ResultDTO<String>("12345","删除失败");
+	}
 }

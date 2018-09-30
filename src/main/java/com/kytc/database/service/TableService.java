@@ -43,4 +43,39 @@ public interface TableService {
 	 * @return ResultDTO<String>
 	 */
 	ResultDTO<String> export(String database, String tableName);
+	/**
+	 * @param database
+	 * @param tableName
+	 * @param priKey
+	 * @param priValue
+	 * @return
+	 */
+	ResultDTO<Map<String,Object>> dataDetail(String database, String tableName,String priKey,String priValue);
+	/**
+	 * @author fisher
+	 * @description 删除数据
+	 * @date 2018年6月16日下午11:08:34
+	 * @param database
+	 * @param tableName
+	 * @param priKey
+	 * @param priValue
+	 * @return
+	 */
+	ResultDTO<String> delete(String database, String tableName,String priKey,String priValue);
+	/**
+	 * @author fisher
+	 * @description 添加数据
+	 * @date 2018年6月2日下午9:42:01
+	 * @param map
+	 * @return
+	 */
+	ResultDTO<String> addData(Map<String,Object> map);
+	/**
+	 * @author fisher
+	 * @description 修改表数据
+	 * @date 2018年6月16日下午6:26:52
+	 * @param map
+	 * @return
+	 */
+	ResultDTO<String> updateData(Map<String,Object> map);
 }
