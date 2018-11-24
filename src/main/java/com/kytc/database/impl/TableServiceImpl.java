@@ -12,7 +12,7 @@ import com.kytc.database.dto.ColumnDTO;
 import com.kytc.database.dto.TableDTO;
 import com.kytc.database.service.ColumnService;
 import com.kytc.database.service.TableService;
-import com.kytc.database.utils.DatabaseUtils;
+import com.kytc.database.service.export.ExportService;
 import com.kytc.database.vo.TableVO;
 import com.kytc.dto.PageDTO;
 import com.kytc.dto.ResultDTO;
@@ -23,6 +23,39 @@ public class TableServiceImpl implements TableService {
 	private TableDao tableDao;
 	@Resource(name="columnServiceImpl")
 	private ColumnService columnServiceImpl;
+	@Resource(name="exportPOImpl")
+	private ExportService exportPOImpl;
+	@Resource(name="exportDaoImpl")
+	private ExportService exportDaoImpl;
+	@Resource(name="exportMapperImpl")
+	private ExportService exportMapperImpl;
+	@Resource(name="exportServiceImpl")
+	private ExportService exportServiceImpl;
+	@Resource(name="exportImplImpl")
+	private ExportService exportImplImpl;
+	@Resource(name="exportControllerImpl")
+	private ExportService exportControllerImpl;
+	@Resource(name="exportVOImpl")
+	private ExportService exportVOImpl;
+	@Resource(name="exportIndexJsImpl")
+	private ExportService exportIndexJsImpl;
+	@Resource(name="exportIndexHtmlImpl")
+	private ExportService exportIndexHtmlImpl;
+	
+	@Resource(name="exportAddJsImpl")
+	private ExportService exportAddJsImpl;
+	@Resource(name="exportAddHtmlImpl")
+	private ExportService exportAddHtmlImpl;
+	
+	@Resource(name="exportUpdateJsImpl")
+	private ExportService exportUpdateJsImpl;
+	@Resource(name="exportUpdateHtmlImpl")
+	private ExportService exportUpdateHtmlImpl;
+	
+	@Resource(name="exportDetailJsImpl")
+	private ExportService exportDetailJsImpl;
+	@Resource(name="exportDetailHtmlImpl")
+	private ExportService exportDetailHtmlImpl;
 	@Override
 	public ResultDTO<List<String>> list(String database) {
 		// TODO Auto-generated method stub
@@ -45,8 +78,25 @@ public class TableServiceImpl implements TableService {
 	@Override
 	public ResultDTO<String> export(String database, String tableName) {
 		// TODO Auto-generated method stub
+		String packageName = "com.kytc";
 		PageDTO<ColumnDTO> page = columnServiceImpl.list(database, tableName);
-		DatabaseUtils.export(page, tableName);
+//		DatabaseUtils.export(page, tableName);
+		exportPOImpl.export(page, tableName, "com.kytc");
+		exportDaoImpl.export(page, tableName, packageName);
+		exportMapperImpl.export(page, tableName, packageName);
+		exportServiceImpl.export(page, tableName, packageName);
+		exportImplImpl.export(page, tableName, packageName);
+		exportControllerImpl.export(page, tableName, packageName);
+		exportVOImpl.export(page, tableName, packageName);
+		exportIndexJsImpl.export(page, tableName, packageName);
+		
+		exportIndexHtmlImpl.export(page, tableName, packageName);
+		exportAddJsImpl.export(page, tableName, packageName);
+		exportAddHtmlImpl.export(page, tableName, packageName);
+		exportUpdateJsImpl.export(page, tableName, packageName);
+		exportUpdateHtmlImpl.export(page, tableName, packageName);
+		exportDetailJsImpl.export(page, tableName, packageName);
+		exportDetailHtmlImpl.export(page, tableName, packageName);
 		return new ResultDTO<String>();
 	}
 	@Override
