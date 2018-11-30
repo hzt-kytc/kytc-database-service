@@ -66,7 +66,7 @@ public class ExportAddHtmlImpl extends AbstractExportService {
 		detailHtml.append(tab(2)+"<tr>"+
 				tab(3)+"<td colspan=\""+size+"\">"+
 				tab(4)+"<div class=\"btn_div\">"+
-				tab(5)+"<a name=\"save\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-save'\">关闭</a>"+
+				tab(5)+"<a name=\"save\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-save'\">保存</a>"+
 				tab(5)+"<a name=\"close\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-close'\">关闭</a>"+
 				tab(4)+"</div>"+
 				tab(3)+"</td>"+

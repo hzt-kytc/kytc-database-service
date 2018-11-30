@@ -12,9 +12,9 @@ public class ExportControllerImpl extends AbstractExportService {
 			StringBuffer controllerSb = new StringBuffer();
 			if(this.packageName!=null&&!"".equals(this.packageName)) {
 				controllerSb.append("package "+ this.packageName+".controller;\n\n");
-				controllerSb.append("package "+ this.packageName+".po."+javaTableName+"PO;\n");
-				controllerSb.append("package "+ this.packageName+".vo."+javaTableName+"VO;\n");
-				controllerSb.append("package "+ this.packageName+".service."+javaTableName+"Service;\n\n");
+				controllerSb.append("import "+ this.packageName+".po."+javaTableName+"PO;\n");
+				controllerSb.append("import "+ this.packageName+".vo."+javaTableName+"VO;\n");
+				controllerSb.append("import "+ this.packageName+".service."+javaTableName+"Service;\n\n");
 			}
 			controllerSb.append("import javax.annotation.Resource;\n");
 			controllerSb.append("import org.springframework.stereotype.Controller;\n");

@@ -249,7 +249,7 @@ public class DatabaseUtils {
 		detailHtml.append(zhuanyi(2)+"<tr>"+
 				zhuanyi(3)+"<td colspan=\""+size+"\">"+
 				zhuanyi(4)+"<div class=\"btn_div\">"+
-				zhuanyi(5)+"<a name=\"save\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-save'\">关闭</a>"+
+				zhuanyi(5)+"<a name=\"save\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-save'\">保存</a>"+
 				zhuanyi(5)+"<a name=\"close\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-close'\">关闭</a>"+
 				zhuanyi(4)+"</div>"+
 				zhuanyi(3)+"</td>"+
@@ -395,12 +395,16 @@ public class DatabaseUtils {
 					+zhuanyi(1)+ "var mainDivList =  $(\"div.list div.data\",mainDiv);")
 			.append(zhuanyi(1)+"var rootPath = \"/"+javaTableName1+"/\";")
 			.append(zhuanyi(1)+"mainDiv.height($(window).height()-49);\n")
+			.append("\t$(document).keydown(function(event){ \n")
+			.append("\t\tif(event.keyCode==13){\n") 
+			.append("\t\t\t$(\"a[name='search']\",mainDiv).trigger(\"click\");") 
+			.append("\t\t}\n\t}); ")
 			.append("\tmainDiv.off().on(\"click\",\"a[name='add']\",function(){\n")
 			.append("\t\t$.EasyUI.Window({\n"+
 					"\t\t\turl:$.cms.url+rootPath+\"add\",\n"+
 					"\t\t\ttype:\"get\",\n"+
 					"\t\t\twidth:1000,\n"+
-					"\t\t\theight:800,\n"+
+					"\t\t\theight:\"auto\",\n"+
 					"\t\t\ttitle:\"添加\"\n\t\t});\n\t})")
 			.append(".on(\"click\",\"a[name='update']\",function(){\n")
 			.append("\t\t$.datagrid.getSelectRow({\n"+
@@ -412,7 +416,7 @@ public class DatabaseUtils {
 					"\t\t\t\t\ttype:\"get\",\n"+
 					"\t\t\t\t\tdata:{\""+id+"\":value},\n"+
 					"\t\t\t\t\twidth:1000,\n"+
-					"\t\t\t\t\theight:800,\n"+
+					"\t\t\t\t\theight:\"auto\",\n"+
 					"\t\t\t\t\ttitle:\"修改\"\n\t\t\t\t});\n\t\t\t}\n\t\t})\n\t})")
 		.append(".on(\"click\",\"a[name='delete']\",function(){\n")
 		.append("\t\t$.datagrid.getSelectRow({\n"+
@@ -462,7 +466,7 @@ public class DatabaseUtils {
 				"\t\t\t\t\turl:$.cms.url+rootPath+\"detail?"+id+"=\"+rowData."+id+",\n"+
 				"\t\t\t\t\ttype:\"get\",\n"+
 				"\t\t\t\t\twidth:950,\n"+
-				"\t\t\t\t\theight:800,\n"+
+				"\t\t\t\t\theight:\"auto\",\n"+
 				"\t\t\t\t\ttitle:\"查询详情\"\n"+
 				"\t\t\t\t});\n"+
 			    "\t\t\t},\n")

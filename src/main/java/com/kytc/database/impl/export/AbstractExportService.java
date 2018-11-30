@@ -17,7 +17,7 @@ public abstract class AbstractExportService implements ExportService{
 	protected Boolean containsOperator = false;
 	protected Boolean containsModified = false;
 	protected String htmlName = "";
-	private String path = "D://";
+	private String path = "D://database//";
 	protected String fileName = "";
 	protected static final String PRIVATE = "private";
 	protected static final String PUBLIC = "public";

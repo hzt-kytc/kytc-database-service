@@ -78,10 +78,10 @@ public class TableServiceImpl implements TableService {
 	@Override
 	public ResultDTO<String> export(String database, String tableName) {
 		// TODO Auto-generated method stub
-		String packageName = "com.kytc";
+		String packageName = "com.biaoqing.cms";
 		PageDTO<ColumnDTO> page = columnServiceImpl.list(database, tableName);
 //		DatabaseUtils.export(page, tableName);
-		exportPOImpl.export(page, tableName, "com.kytc");
+		exportPOImpl.export(page, tableName, packageName);
 		exportDaoImpl.export(page, tableName, packageName);
 		exportMapperImpl.export(page, tableName, packageName);
 		exportServiceImpl.export(page, tableName, packageName);

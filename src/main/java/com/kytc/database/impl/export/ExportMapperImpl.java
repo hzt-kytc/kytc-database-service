@@ -84,9 +84,9 @@ public class ExportMapperImpl extends AbstractExportService {
 					mapperSb.append(","+tab(3)+"operator = #{operator} ");
 				}
 				if(containsModified){
-					mapperSb.append(","+tab(2)+"gmt_modified = CURRENT_TIMESTAMP() ");
+					mapperSb.append(","+tab(3)+"gmt_modified = CURRENT_TIMESTAMP() ");
 				}
-				mapperSb.append(tab(2)+"where "+tab(3)+id+" = #{id}"+tab(1)+"</update>\n");
+				mapperSb.append(tab(2)+"where "+tab(3)+id+" = #{id}"+tab(1)+"</update>");
 			}
 			mapperSb.append(tab(1)+"<sql id=\"listByCondition\">"+tab(2)+"where"+tab(3)+"1 = 1");
 			for(ColumnDTO dto:page.getRows()){
@@ -106,9 +106,9 @@ public class ExportMapperImpl extends AbstractExportService {
 			mapperSb.append(tab(3)+"</if>");
 			mapperSb.append(tab(3)+"<if test=\"sort==null or sort==''\">");
 			if(containsModified){
-				mapperSb.append(tab(3)+"order by gmt_modified desc ");
+				mapperSb.append(tab(4)+"order by gmt_modified desc ");
 			}else{
-				mapperSb.append(tab(3)+"order by "+id+" desc ");
+				mapperSb.append(tab(4)+"order by "+id+" desc ");
 			}
 			mapperSb.append(tab(3)+"</if>");
 			mapperSb.append(tab(3)+"limit #{start},#{pageSize};");

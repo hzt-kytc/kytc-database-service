@@ -1,6 +1,7 @@
 package com.kytc.database.impl.export;
 
 import org.springframework.stereotype.Service;
+
 @Service("exportImplImpl")
 public class ExportImplImpl extends AbstractExportService {
 
@@ -29,7 +30,7 @@ public class ExportImplImpl extends AbstractExportService {
 			implSb.append(tab(2)+"if(flag) {");
 			implSb.append(tab(3)+"return CommonUtils.returnDTO();"+tab(2)+"} ");
 			implSb.append("else {");
-			implSb.append(tab(3)+"return CommonUtils.returnDTO(CodeEnum."+tableName.toUpperCase().replace("TB_", "")+"_ADD_FAIL);");
+			implSb.append(tab(3)+"return CommonUtils.returnDTO(CodeEnum.ADD_FAIL);");
 			implSb.append(tab(2)+"}");
 			implSb.append(tab(1)+"}");
 			implSb.append(tab(1)+"@Override");
@@ -38,7 +39,7 @@ public class ExportImplImpl extends AbstractExportService {
 			implSb.append(tab(2)+"if(flag) {");
 			implSb.append(tab(3)+"return CommonUtils.returnDTO();"+tab(2)+"} ");
 			implSb.append("else {");
-			implSb.append(tab(3)+"return CommonUtils.returnDTO(CodeEnum."+tableName.toUpperCase().replace("TB_", "")+"_UPDATE_FAIL);");
+			implSb.append(tab(3)+"return CommonUtils.returnDTO(CodeEnum.UPDATE_FAIL);");
 			implSb.append(tab(2)+"}");
 			implSb.append(tab(1)+"}");
 			implSb.append(tab(1)+"@Override");
@@ -52,17 +53,17 @@ public class ExportImplImpl extends AbstractExportService {
 			implSb.append(tab(2)+"if(flag) {");
 			implSb.append(tab(3)+"return CommonUtils.returnDTO();");
 			implSb.append(tab(2)+"} else {");
-			implSb.append(tab(3)+"return CommonUtils.returnDTO(CodeEnum."+tableName.toUpperCase().replace("TB_", "")+"_DELETE_FAIL);");
+			implSb.append(tab(3)+"return CommonUtils.returnDTO(CodeEnum.DELETE_FAIL);");
 			implSb.append(tab(2)+"}");
 			implSb.append(tab(1)+"}");
 			implSb.append(tab(1)+"@Override");
 			implSb.append(tab(1)+"public ResultDTO<"+javaTableName+"PO> detail(Integer id){");
-			implSb.append(tab(2)+"return new ResultDTO<"+javaTableName+"PO>("+javaTableName1+"Dao.detail(id));");
+			implSb.append(tab(2)+"return CommonUtils.returnDTO("+javaTableName1+"Dao.detail(id));");
 			implSb.append(tab(1)+"}");
 			implSb.append(tab(1)+"@Override");
 			implSb.append(tab(1)+"public PageDTO<"+javaTableName+"PO> list("+javaTableName+"VO vo){");
 			
-			implSb.append(tab(2)+"vo.initStart();");
+			implSb.append(tab(2)+"vo.init();");
 			implSb.append(tab(2)+"PageDTO<"+javaTableName+"PO> page = new PageDTO<"+javaTableName+"PO>();");
 			implSb.append(tab(2)+"page.setRows("+javaTableName1+"Dao.list(vo));");
 			implSb.append(tab(2)+"page.setTotal("+javaTableName1+"Dao.count(vo));");

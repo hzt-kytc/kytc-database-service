@@ -17,8 +17,8 @@ public class ExportDaoImpl extends AbstractExportService {
 			StringBuffer interfaceSb = new StringBuffer("");
 			if(this.packageName!=null&&!"".equals(this.packageName)) {
 				interfaceSb.append("package "+ this.packageName+".dao;\n\n");
-				interfaceSb.append("package "+ this.packageName+".po."+javaTableName+"PO;\n");
-				interfaceSb.append("package "+ this.packageName+".vo."+javaTableName+"VO;\n\n");
+				interfaceSb.append("import "+ this.packageName+".po."+javaTableName+"PO;\n");
+				interfaceSb.append("import "+ this.packageName+".vo."+javaTableName+"VO;\n\n");
 			}
 			interfaceSb.append("import java.util.List;\n\n"+ PUBLIC +" interface "+javaTableName+"Dao {");
 			interfaceSb.append(tab(1) + "/**");

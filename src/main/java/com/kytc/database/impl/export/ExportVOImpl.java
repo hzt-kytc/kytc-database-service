@@ -18,7 +18,7 @@ public class ExportVOImpl extends AbstractExportService {
 			StringBuffer functionSb = new StringBuffer("");
 			StringBuffer toStringSb = new StringBuffer(tab(1)+"@Override"+
 					tab(1)+"public String toString() {"+
-					tab(2)+"JsonUtils.toJSON( this );"+
+					tab(2)+"return JsonUtils.toJSON( this );"+
 					tab(1)+"}\n");
 			for(ColumnDTO dto:page.getRows()){
 				String columnName = dto.getJavaName();
@@ -43,7 +43,7 @@ public class ExportVOImpl extends AbstractExportService {
 			importSb.append(classSb);
 			StringBuffer packageSb = new StringBuffer("");
 			if( packageName != null && !"".equals(packageName) ) {
-				packageSb.append("package "+packageName+".po;\n\n");
+				packageSb.append("package "+packageName+".vo;\n\n");
 			}
 			packageSb.append(importSb);
 			return packageSb;
